@@ -12,16 +12,16 @@ namespace LeagueProfileStats.Data
         
         public DataContext(DbContextOptions<DataContext> options) : base(options) 
         {
-            ProfileContext = Set<Profile>();
+            ProfileContext = Set<PlayerProfile>();
         }
 
-        public DbSet<Profile> ProfileContext { get; set; }
+        public DbSet<PlayerProfile> ProfileContext { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder) {
             
-            builder.Entity<Profile>().Property(res => res.Id).ValueGeneratedOnAddOrUpdate();
+            builder.Entity<PlayerProfile>().Property(res => res.Id).ValueGeneratedOnAdd();
 
-            builder.Entity<Profile>().Property(res => res.Nome).IsRequired();
+            builder.Entity<PlayerProfile>().Property(res => res.Nome).IsRequired();
         }
     }
 }

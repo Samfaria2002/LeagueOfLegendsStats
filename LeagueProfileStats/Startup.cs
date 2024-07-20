@@ -1,26 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Sqlite;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
-using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Npgsql;
-using Newtonsoft.Json;
-using AutoMapper;
 using LeagueProfileStats.Data;
+using LeagueProfileStats.Model;
 
-namespace ToDoListKeevo_api
+namespace LeagueProfileStats
 {
     public class Startup
     {
@@ -32,15 +20,17 @@ namespace ToDoListKeevo_api
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
-        {   
-            services.AddDbContext<DataContext>(
-                context => context.UseNpgsql(Configuration.GetConnectionString("PostgresConnection"))
-            );
+        {
+            services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("SqliteConnection")));
 
-            services.AddDbContext<DataContext>( x => x.UseSqlite(Configuration.GetConnectionString("SqliteConnection")));
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            services.AddControllers();
-            services.AddEndpointsApiExplorer();
+            services.AddScoped<DataContext>();
+            services.AddScoped<PlayerProfile>(provider => new PlayerProfile(
+                0, "defaultName", "defaultEmail", "defaultPassword", "defaultNickname", 
+                enServer.BR, enRank.Ferro, enTier.I, 0, "0%", enRole.Top, enRole.Jungle, false, null));
+
             services.AddSwaggerGen();
 
             services.AddCors();
@@ -48,29 +38,18 @@ namespace ToDoListKeevo_api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment()){
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
-            }
-            
-            if (env.IsDevelopment()){
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
-            //Método para configurar o CORS
-            //Esse método permite que a API seja acessada por qualquer origem, método e cabeçalho.
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
