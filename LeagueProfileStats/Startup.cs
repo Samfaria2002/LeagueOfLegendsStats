@@ -45,6 +45,8 @@ namespace LeagueProfileStats
                 app.UseSwaggerUI();
             }
 
+            //teste testre
+            
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
