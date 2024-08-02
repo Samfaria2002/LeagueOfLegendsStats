@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace LeagueProfileStats.Model
 {
@@ -51,26 +52,38 @@ namespace LeagueProfileStats.Model
     {
         public int Id { get; set; }
 
+        [Required]
         public string Nome { get; set; }
 
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
 
+        [Required]
         public string Senha { get; set; }
 
+        [Required]
         public string Nickname { get; set; }
 
+        [Required]
         public enServer Server { get; set; }
 
+        [Required]
         public enRank Rank { get; set; }
 
+        [Required]
         public enTier Tier { get; set; }
 
+        [Required]
         public int Pdl { get; set; }
 
+        [Required]
         public string Winrate { get; set; }
 
+        [Required]
         public enRole MainRole { get; set; }
 
+        [Required]
         public enRole SecondaryRole { get; set; }
 
         public bool? ProPlayer { get; set; }

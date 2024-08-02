@@ -44,11 +44,17 @@ namespace LeagueProfileStats.controller
         }
 
         [HttpPost]
-        public IActionResult PostProfile(PlayerProfile profile) {
-            
+        public async Task<IActionResult> PostProfile([FromBody] PlayerProfile profile)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             _context.ProfileContext.Add(profile);
-            _context.SaveChanges();
-            return Created($"/api/profile/{profile.Id}", profile);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetProfileById), new { id = profile.Id }, profile);
         }
     }
 }
