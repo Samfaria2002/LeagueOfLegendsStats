@@ -22,6 +22,8 @@ namespace LeagueProfileStats.Data
             builder.Entity<PlayerProfile>().Property(res => res.Id).ValueGeneratedOnAdd();
 
             builder.Entity<PlayerProfile>().Property(res => res.Nome).IsRequired();
+            
+            builder.Entity<PlayerProfile>().HasKey(type => new {type.Rank, type.Tier});
         }
     }
 }
